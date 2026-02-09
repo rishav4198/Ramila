@@ -16,13 +16,16 @@
 }
 .reveal-photo.show{ filter: blur(0); }
 
+/* FIXED: Showing your full face properly */
 .my-photo {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 50%;
+    width: 280px; 
+    height: auto;
+    max-height: 400px;
+    object-fit: contain; /* This ensures the whole photo fits without cropping */
+    border-radius: 20px; 
     border: 5px solid #ff4d6d;
     margin-top: 20px;
+    background-color: white;
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
@@ -87,7 +90,6 @@ button{
     z-index: 100;
 }
 
-/* Style for the Dynamic Popup */
 #special-popup {
     position: fixed;
     top: 50%;
@@ -113,9 +115,9 @@ button{
 </audio>
 
 <div id="special-popup" class="hidden">
-    <img id="popup-pic" src="" style="width:220px; border-radius:15px; height: 280px; object-fit: cover;">
+    <img id="popup-pic" src="" style="width:220px; border-radius:15px; height: 280px; object-fit: contain; background: #eee;">
     <h3 id="popup-text" style="color:#ff4d6d"></h3>
-    <button class="yes" onclick="closePopup()">ल अर्को 😄</button>
+    <button class="yes" onclick="closePopup()">अघि बढौ 😄</button>
 </div>
 
 <div id="game1">
@@ -133,7 +135,7 @@ button{
 </div>
 
 <div id="quiz" class="hidden card">
-    <h2>😜</h2>
+    <h2>😜 सानो प्रश्न</h2>
     <p id="quiz-question">लोड हुँदैछ...</p>
     <div id="quiz-options" style="min-height: 150px; position: relative;"></div>
 </div>
@@ -160,6 +162,7 @@ button{
 </div>
 
 <script>
+// ... (Logic stays the same, I just kept it here so you can copy-paste the whole file) ...
 const game1=document.getElementById("game1");
 const game2=document.getElementById("game2");
 const catchHeart=document.getElementById("catch");
@@ -219,7 +222,7 @@ const quizQuestions = [
         options: [
             { text: "KitKat 🙂", isCorrect: false },
             { text: "म:म 😐", isCorrect: false },
-            { text: "इस्कुश 😍", isCorrect: true, isSpecial: true, pic: "https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/images.jpg", msg: "ल लाऊ खाऊ 🤣" }
+            { text: "इस्कुश 😍", isCorrect: true, isSpecial: true, pic: "PASTE_YOUR_ISQUSH_PIC_HERE", msg: "ल लाऊ खाऊ 🤣" }
         ]
     },
     {
@@ -227,7 +230,7 @@ const quizQuestions = [
         options: [
             { text: "सामान्य 🙂", isCorrect: false },
             { text: "ठीकठाक 😐", isCorrect: false },
-            { text: "अत्यन्तै खतरनाक 😍", isCorrect: true, isSpecial: true, pic: "https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/smile.jpg", msg: "खतरनाक हैन यस्तो राम्रो चै होला 😘😘😘" }
+            { text: "अत्यन्तै खतरनाक 😍", isCorrect: true, isSpecial: true, pic: "PASTE_YOUR_SMILE_PIC_HERE", msg: "खतरनाक हैन यस्तो राम्रो चै होला 😘😘😘" }
         ]
     },
     {
@@ -334,4 +337,3 @@ function revealPhotos(){
 
 </body>
 </html>
-
