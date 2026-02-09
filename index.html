@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>रामिलाका लागि ❤️</title>
+
+<style>
+body{
+    margin:0;
+    background: radial-gradient(circle at top, #ff6f91, #ff9671);
+    font-family: Arial, sans-serif;
+    text-align:center;
+    color:white;
+    padding:20px;
+    overflow-x:hidden;
+}
+h1{font-size:2.2em}
+.heart{
+    font-size:55px;
+    margin:10px;
+    cursor:pointer;
+    animation:float 1.5s infinite alternate;
+}
+#proposal,#final{
+    display:none;
+    background:white;
+    color:#333;
+    padding:25px;
+    border-radius:20px;
+    margin-top:30px;
+    animation:pop .8s;
+}
+button{
+    padding:12px 22px;
+    margin:10px;
+    border:none;
+    border-radius:25px;
+    font-size:16px;
+    cursor:pointer;
+}
+.yes{background:#ff4d6d;color:white}
+.smile{background:#ffd166}
+.whatsapp{background:#25D366;color:white}
+.photo{
+    width:100%;
+    max-width:300px;
+    border-radius:15px;
+    margin:15px auto;
+    display:block;
+}
+@keyframes float{to{transform:translateY(-12px)}}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.confetti{
+    position:fixed;
+    top:-10px;
+    font-size:20px;
+    animation:fall linear forwards;
+}
+@keyframes fall{to{transform:translateY(110vh);opacity:0}}
+</style>
+</head>
+
+<body>
+
+<h1>❤️ रामिला, एउटा सानो खेल ❤️</h1>
+<p>५ वटा मुटु ट्याप गर 😊</p>
+<p><small>(पहिलो ट्यापसँगै संगीत सुरु हुन्छ)</small></p>
+
+<div id="game">
+    <span class="heart">❤️</span>
+    <span class="heart">❤️</span>
+    <span class="heart">❤️</span>
+    <span class="heart">❤️</span>
+    <span class="heart">❤️</span>
+</div>
+
+<div id="proposal">
+    <h2>प्रिय रामिला ❤️</h2>
+
+    <!-- Optional Photo (replace src if you want) -->
+    <img class="photo" src="https://via.placeholder.com/300x200?text=Ramila+❤️" alt="Ramila">
+
+    <p id="typeText"></p>
+
+    <button class="yes" onclick="yesClicked()">हो 😊</button>
+    <button class="smile" onclick="smileClicked()">पहिले मुस्कान 😄</button>
+</div>
+
+<div id="final">
+    <h2>❤️ धन्यवाद रामिला ❤️</h2>
+    <p>
+        आज तिमीले मेरो मन जित्यौ।<br><br>
+        यो सुरुवात मात्र हो।<br>
+        म तिमीलाई सधैं सम्मान, समय<br>
+        र साँचो माया दिने वाचा गर्छु।<br><br>
+        🌹
+    </p>
+
+    <button class="whatsapp" onclick="openWhatsApp()">
+        WhatsApp मा सन्देश पठाऊ 💬
+    </button>
+</div>
+
+<audio id="music" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+let count=0, musicStarted=false;
+const hearts=document.querySelectorAll(".heart");
+const proposal=document.getElementById("proposal");
+const final=document.getElementById("final");
+const typeText=document.getElementById("typeText");
+const music=document.getElementById("music");
+
+const message=`म तिमीलाई एउटा सानो खेल खेलाउन चाहन्थेँ,
+तर आज म आफ्नै मन तिमीसँग हार्न चाहन्छु।
+
+रामिला,
+तिमी मेरो जीवनमा
+बिना योजना आएको
+सबैभन्दा सुन्दर अनुभूति हौ।
+
+म तिमीलाई कुनै दबाब दिन चाहन्न,
+तर मनको गहिराइबाट एउटा प्रश्न सोध्न चाहन्छु।
+
+के तिमी मेरो जीवनको
+सबैभन्दा विशेष मान्छे बन्न चाहन्छौ?`;
+
+hearts.forEach(h=>{
+    h.onclick=()=>{
+        if(!musicStarted){music.play();musicStarted=true;}
+        h.style.display="none";
+        count++;
+        if(count===5){
+            proposal.style.display="block";
+            typeWriter(message);
+        }
+    }
+});
+
+function typeWriter(text){
+    let i=0;
+    typeText.innerHTML="";
+    const t=setInterval(()=>{
+        typeText.innerHTML+=text.charAt(i++);
+        if(i>=text.length)clearInterval(t);
+    },40);
+}
+
+function yesClicked(){
+    proposal.style.display="none";
+    final.style.display="block";
+    confetti();
+}
+
+function smileClicked(){
+    alert("त्यो मुस्कान नै मेरो उत्तर हो 😄❤️");
+}
+
+function confetti(){
+    for(let i=0;i<60;i++){
+        const c=document.createElement("div");
+        c.className="confetti";
+        c.innerHTML="🎉";
+        c.style.left=Math.random()*100+"vw";
+        c.style.animationDuration=(Math.random()*3+2)+"s";
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),5000);
+    }
+}
+
+function openWhatsApp(){
+    const text=encodeURIComponent("रामिला ❤️\nआज तिमीले मेरो मन जित्यौ।\nयो सुरुवात मात्र हो 🌹");
+    window.open("https://wa.me/?text="+text,"_blank");
+}
+</script>
+
+</body>
+</html>
