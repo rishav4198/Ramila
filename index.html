@@ -16,7 +16,6 @@
 }
 .reveal-photo.show{ filter: blur(0); }
 
-/* Styling for YOUR photo at the end */
 .my-photo {
     width: 200px;
     height: 200px;
@@ -50,23 +49,23 @@ h1{font-size:2.2em}
     margin:10px;
     cursor:pointer;
     display: inline-block;
-    transition: transform 0.2s;
 }
-.heart:active { transform: scale(1.5); }
 
+/* SLOWER Explosion Animation */
 .explosion {
     position: fixed;
     pointer-events: none;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 22px;
     color: yellow;
-    animation: explode 0.8s forwards;
+    animation: explode 2.0s ease-out forwards; /* Slowed to 2 seconds */
     z-index: 1000;
 }
 
 @keyframes explode {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(3) translateY(-50px); opacity: 0; }
+    0% { transform: scale(1) translateY(0); opacity: 1; }
+    50% { opacity: 1; }
+    100% { transform: scale(2.5) translateY(-100px); opacity: 0; }
 }
 
 .hidden{display:none}
@@ -88,6 +87,20 @@ button{
     cursor:pointer;
     z-index: 100;
 }
+
+/* Style for the Isqush Popup */
+#isqush-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    z-index: 2000;
+    color: #333;
+}
 </style>
 </head>
 
@@ -98,6 +111,12 @@ button{
 <audio id="myMusic" loop>
     <source src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/full_circle_maya_with_lyrics_mp3_23989.mp3" type="audio/mpeg">
 </audio>
+
+<div id="isqush-popup" class="hidden">
+    <img id="isqush-pic" src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/images.jpg" style="width:200px; border-radius:15px;">
+    <h2 style="color:#ff4d6d">ल लाऊ खाऊ 🤣</h2>
+    <button class="yes" onclick="closeIsqush()">अघि बढौ 😄</button>
+</div>
 
 <div id="game1">
     <p id="game1-instruction">पहिले एउटा मुटु रोज 😄</p>
@@ -151,6 +170,7 @@ const noBtn=document.getElementById("noBtn");
 const quizQuestion = document.getElementById("quiz-question");
 const quizOptions = document.getElementById("quiz-options");
 const music = document.getElementById("myMusic");
+const isqushPopup = document.getElementById("isqush-popup");
 
 let clickCount = 0;
 let currentQuestionIndex = 0;
@@ -162,7 +182,7 @@ function createExplosion(x, y, text) {
     el.style.left = x + "px";
     el.style.top = y + "px";
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 800);
+    setTimeout(() => el.remove(), 2000);
 }
 
 function handleHeartClick(element, event) {
@@ -197,7 +217,7 @@ const quizQuestions = [
         options: [
             { text: "KitKat 🙂", isCorrect: false },
             { text: "म:म 😐", isCorrect: false },
-            { text: "इस्कुश 😍", isCorrect: true }
+            { text: "इस्कुश 😍", isCorrect: true, isSpecial: true }
         ]
     },
     {
@@ -213,25 +233,25 @@ const quizQuestions = [
         options: [
             { text: "गर्दिन एकदम राम्रो छु म", isCorrect: false },
             { text: "अलिअलि", isCorrect: false },
-            { text: "एकदमै  धेरै", isCorrect: true }
+            { text: "एकदमै धेरै", isCorrect: true }
         ]
     },
     {
         question: "के तिमी मलाई मन पराउँछौ?",
         options: [
-            { text: "अह गर्दिन नाटक गरेक", isCorrect: false },
+            { text: "अह गर्दिन नाटक गरेको", isCorrect: false },
             { text: "हल्का", isCorrect: false },
             { text: "अ थोरै गर्छु ", isCorrect: true }
         ]
     },
-    
+    {
         question: "कति प्रतिशत मन पर्छ?",
         options: [
             { text: "शून्य प्रतिशत", isCorrect: false },
             { text: "आलु प्रतिशत", isCorrect: false },
             { text: "सय प्रतिशत मन पर्छ!", isCorrect: true }
         ]
-    }
+    },
     {
         question: "पक्का होनी ?",
         options: [
@@ -239,8 +259,7 @@ const quizQuestions = [
             { text: "मक्ख मात्र बनाईदेको ", isCorrect: false },
             { text: "किन नपराउनु, तिमी त मेरो मुटु हौ नि 😘", isCorrect: true }
         ]
-    },
-    {
+    }
 ];
 
 function loadQuestion() {
@@ -254,7 +273,13 @@ function loadQuestion() {
         
         if (option.isCorrect) {
             button.className = "yes";
-            button.onclick = rightAnswer;
+            button.onclick = () => {
+                if(option.isSpecial) {
+                    isqushPopup.classList.remove("hidden");
+                } else {
+                    rightAnswer();
+                }
+            };
         } else {
             button.onmouseover = () => {
                 button.classList.add("fly");
@@ -265,6 +290,11 @@ function loadQuestion() {
         }
         quizOptions.appendChild(button);
     });
+}
+
+function closeIsqush() {
+    isqushPopup.classList.add("hidden");
+    rightAnswer();
 }
 
 function rightAnswer(){
@@ -300,4 +330,3 @@ function revealPhotos(){
 
 </body>
 </html>
-
