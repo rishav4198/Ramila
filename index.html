@@ -51,14 +51,13 @@ h1{font-size:2.2em}
     display: inline-block;
 }
 
-/* SLOWER Explosion Animation */
 .explosion {
     position: fixed;
     pointer-events: none;
     font-weight: bold;
     font-size: 22px;
     color: yellow;
-    animation: explode 2.0s ease-out forwards; /* Slowed to 2 seconds */
+    animation: explode 2.0s ease-out forwards;
     z-index: 1000;
 }
 
@@ -88,8 +87,8 @@ button{
     z-index: 100;
 }
 
-/* Style for the Isqush Popup */
-#isqush-popup {
+/* Style for the Dynamic Popup */
+#special-popup {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -100,6 +99,7 @@ button{
     box-shadow: 0 0 50px rgba(0,0,0,0.5);
     z-index: 2000;
     color: #333;
+    width: 280px;
 }
 </style>
 </head>
@@ -112,10 +112,10 @@ button{
     <source src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/full_circle_maya_with_lyrics_mp3_23989.mp3" type="audio/mpeg">
 </audio>
 
-<div id="isqush-popup" class="hidden">
-    <img id="isqush-pic" src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/images.jpg" style="width:200px; border-radius:15px;">
-    <h2 style="color:#ff4d6d">ल लाऊ खाऊ 🤣</h2>
-    <button class="yes" onclick="closeIsqush()">अघि बढौ 😄</button>
+<div id="special-popup" class="hidden">
+    <img id="popup-pic" src="" style="width:220px; border-radius:15px; height: 280px; object-fit: cover;">
+    <h3 id="popup-text" style="color:#ff4d6d"></h3>
+    <button class="yes" onclick="closePopup()">अघि बढौ 😄</button>
 </div>
 
 <div id="game1">
@@ -170,7 +170,9 @@ const noBtn=document.getElementById("noBtn");
 const quizQuestion = document.getElementById("quiz-question");
 const quizOptions = document.getElementById("quiz-options");
 const music = document.getElementById("myMusic");
-const isqushPopup = document.getElementById("isqush-popup");
+const specialPopup = document.getElementById("special-popup");
+const popupPic = document.getElementById("popup-pic");
+const popupText = document.getElementById("popup-text");
 
 let clickCount = 0;
 let currentQuestionIndex = 0;
@@ -217,7 +219,7 @@ const quizQuestions = [
         options: [
             { text: "KitKat 🙂", isCorrect: false },
             { text: "म:म 😐", isCorrect: false },
-            { text: "इस्कुश 😍", isCorrect: true, isSpecial: true }
+            { text: "इस्कुश 😍", isCorrect: true, isSpecial: true, pic: "PASTE_YOUR_ISQUSH_PIC_HERE", msg: "ल लाऊ खाऊ 🤣" }
         ]
     },
     {
@@ -225,7 +227,7 @@ const quizQuestions = [
         options: [
             { text: "सामान्य 🙂", isCorrect: false },
             { text: "ठीकठाक 😐", isCorrect: false },
-            { text: "अत्यन्तै खतरनाक 😍", isCorrect: true }
+            { text: "अत्यन्तै खतरनाक 😍", isCorrect: true, isSpecial: true, pic: "PASTE_YOUR_SMILE_PIC_HERE", msg: "खतरनाक हैन यस्तो राम्रो चै होला 😘😘😘" }
         ]
     },
     {
@@ -275,7 +277,9 @@ function loadQuestion() {
             button.className = "yes";
             button.onclick = () => {
                 if(option.isSpecial) {
-                    isqushPopup.classList.remove("hidden");
+                    popupPic.src = option.pic;
+                    popupText.innerText = option.msg;
+                    specialPopup.classList.remove("hidden");
                 } else {
                     rightAnswer();
                 }
@@ -292,8 +296,8 @@ function loadQuestion() {
     });
 }
 
-function closeIsqush() {
-    isqushPopup.classList.add("hidden");
+function closePopup() {
+    specialPopup.classList.add("hidden");
     rightAnswer();
 }
 
