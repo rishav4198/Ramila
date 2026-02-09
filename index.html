@@ -6,7 +6,6 @@
 <title>रामिलाका लागि ❤️</title>
 
 <style>
-
 .reveal-photo{
     width:90px;
     height:120px;
@@ -15,10 +14,7 @@
     filter: blur(8px);
     transition: filter 1.5s ease;
 }
-
-.reveal-photo.show{
-    filter: blur(0);
-}
+.reveal-photo.show{ filter: blur(0); }
 
 body{
     margin:0;
@@ -27,6 +23,7 @@ body{
     text-align:center;
     color:white;
     padding:20px;
+    overflow-x: hidden;
 }
 h1{font-size:2.2em}
 .card{
@@ -51,14 +48,12 @@ button{
     margin:10px;
 }
 .yes{background:#ff4d6d;color:white}
-.no{
-    background:#ddd;
-    position:absolute;
-}
+.no{ background:#ddd; position:absolute; }
 #catch{
     font-size:60px;
     position:absolute;
     cursor:pointer;
+    z-index: 100;
 }
 </style>
 </head>
@@ -66,26 +61,24 @@ button{
 <body>
 
 <h1>❤️ रामिला, ल सुरु गरम है त ❤️</h1>
-<p>पहिले एउटा मुटु रोज 😄</p>
 
-<!-- MUSIC -->
-<div class="card">
-    <p>🎵 यो गीत तिम्रो लागि!</p>
-    <iframe width="100%" height="80"
-        src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/full_circle_maya_with_lyrics_mp3_23989.mp3"
-        frameborder="0"
-        allow="autoplay; encrypted-media">
-    </iframe>
+<audio id="myMusic" loop>
+    <source src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/full_circle_maya_with_lyrics_mp3_23989.mp3" type="audio/mpeg">
+</audio>
+
+<div id="quiz" class="card">
+    <h2>😜 सानो प्रश्न</h2>
+    <p id="quiz-question">लोड हुँदैछ...</p>
+    <div id="quiz-options"></div>
 </div>
 
-<!-- GAME 1 -->
-<div id="game1">
+<div id="game1" class="hidden">
+    <p>अब यी मुटुहरूलाई गायब पार! 😄</p>
     <span class="heart">❤️</span>
     <span class="heart">❤️</span>
     <span class="heart">❤️</span>
 </div>
 
-<!-- GAME 2 -->
 <div id="game2" class="hidden">
     <div class="card">
         <h2>😄 यो मुटु समात!</h2>
@@ -94,46 +87,26 @@ button{
     <div id="catch">❤️</div>
 </div>
 
-<!-- QUIZ -->
-<div id="quiz" class="hidden card">
-    <h2>😜 सानो प्रश्न</h2>
-    <p id="quiz-question">रमिलालाई धेरै के मन पर्छ?</p>
-    <div id="quiz-options">
-        <button onclick="wrongAnswer()">KitKat 🙂</button>
-        <button onclick="wrongAnswer()">म:म  😐</button>
-        <button onclick="rightAnswer()">इस्कुश  😍</button>
-    </div>
-</div>
-
-<!-- FINAL -->
 <div id="final" class="hidden card">
     <h2 id="final-heading"> ❤️❤️❤️</h2>
-
-    <!-- PHOTO GALLERY -->
     <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
         <img class="reveal-photo" src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/a23e33dc-8a6f-4515-863b-23cd76148767.jpg"> 
         <img class="reveal-photo" src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/a240ea63-89e9-43dd-887c-4bdde55eb42b.jpg"> 
         <img class="reveal-photo" src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/c207bac1-8684-4b1e-86dd-f14d1ea03a43.jpg"> 
     </div>
-
     <p id="final-message">
         ठीक छ… अब सिधै सोध्छु 😄<br><br>
         के तिमी मेरो साथमा<br>
         अझै यस्ता रमाइला खेलहरू<br>
         खेल्न चाहन्छौ 😂😂😂?
     </p>
-
     <button class="yes" onclick="accepted()">हुन्छ 😊</button>
     <button class="no" id="noBtn">नाई 😅</button>
 </div>
 
-
 <div id="end" class="hidden card">
     <h2>🎉 YESSS! 🎉</h2>
-    <p>
-        Oh Shit !<br>
-        Now you are stuck 😄❤️<br><br>
-    </p>
+    <p>Oh Shit !<br>Now you are stuck 😄❤️</p>
 </div>
 
 <script>
@@ -147,13 +120,20 @@ const end=document.getElementById("end");
 const noBtn=document.getElementById("noBtn");
 const quizQuestion = document.getElementById("quiz-question");
 const quizOptions = document.getElementById("quiz-options");
-const finalHeading = document.getElementById("final-heading");
-const finalMessage = document.getElementById("final-message");
+const music = document.getElementById("myMusic");
 
 let count=0;
-let quizAttempts = 0;
+let currentQuestionIndex = 0;
 
 const quizQuestions = [
+    {
+        question: "रमिलालाई धेरै के मन पर्छ?",
+        options: [
+            { text: "KitKat 🙂", isCorrect: false },
+            { text: "म:म 😐", isCorrect: false },
+            { text: "इस्कुश 😍", isCorrect: true }
+        ]
+    },
     {
         question: "रामिलाको मुस्कान कस्तो हुन्छ?",
         options: [
@@ -169,33 +149,49 @@ const quizQuestions = [
             { text: "अलिअलि", isCorrect: false },
             { text: "म तिमीलाई माया गर्छु! ❤️", isCorrect: true }
         ]
-    },
-    {
-        question: "पक्का तिमी मलाई मन पराउँदैनौ?",
-        options: [
-            { text: "हो, म पक्का छु", isCorrect: false },
-            { text: "सय प्रतिशत पक्का", isCorrect: false },
-            { text: "किन नपराउनु, तिमी मेरो सबैभन्दा मिल्ने साथी हो!", isCorrect: true }
-        ]
-    },
-    {
-        question: "एक प्रतिशत पनि मलाई मन पर्दैन र?",
-        options: [
-            { text: "एक प्रतिशत", isCorrect: false },
-            { text: "पचास , हुनसक्छ", isCorrect: false },
-            { text: "सय प्रतिशत मन पर्छ!", isCorrect: true }
-        ]
     }
 ];
 
-let currentQuestionIndex = 0;
+// Load first question on start
+window.onload = loadQuestion;
+
+function loadQuestion() {
+    const q = quizQuestions[currentQuestionIndex];
+    quizQuestion.textContent = q.question;
+    quizOptions.innerHTML = '';
+    q.options.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option.text;
+        button.onclick = () => {
+            // PLAY MUSIC on the first click!
+            music.play().catch(e => console.log("Waiting for user interaction"));
+            
+            if(option.isCorrect) {
+                rightAnswer();
+            } else {
+                alert("हाहा 😄 होइन होला !");
+            }
+        };
+        quizOptions.appendChild(button);
+    });
+}
+
+function rightAnswer(){
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quizQuestions.length) {
+        loadQuestion();
+    } else {
+        quiz.classList.add("hidden");
+        game1.classList.remove("hidden");
+    }
+}
 
 hearts.forEach(h=>{
     h.onclick=()=>{
-        h.style.display="none";
+        h.style.visibility="hidden";
         count++;
         if(count===3){
-            game1.style.display="none";
+            game1.classList.add("hidden");
             game2.classList.remove("hidden");
             moveCatch();
         }
@@ -208,53 +204,10 @@ function moveCatch(){
 }
 
 catchHeart.onclick=()=>{
-    game2.style.display="none";
-    quiz.classList.remove("hidden");
-    loadQuestion();
+    game2.classList.add("hidden");
+    final.classList.remove("hidden");
+    revealPhotos();
 };
-
-function loadQuestion() {
-    const q = quizQuestions[currentQuestionIndex];
-    quizQuestion.textContent = q.question;
-    quizOptions.innerHTML = '';
-    q.options.forEach(option => {
-        const button = document.createElement('button');
-        button.textContent = option.text;
-        button.onclick = option.isCorrect ? rightAnswer : wrongAnswer;
-        quizOptions.appendChild(button);
-    });
-}
-
-function wrongAnswer(){
-    quizAttempts++;
-    if (quizAttempts < quizQuestions.length * 2) { // Allow a few wrong answers before advancing
-        alert("हाहा 😄 होइन होला !");
-        // Optional: Shuffle options or change question if desired after a wrong answer
-        // loadQuestion();
-    } else {
-        // If she keeps getting it wrong, maybe it's time to move on or gently nudge.
-        currentQuestionIndex++;
-        if (currentQuestionIndex < quizQuestions.length) {
-            loadQuestion();
-        } else {
-            // All questions exhausted, advance to final stage
-            quiz.style.display="none";
-            final.classList.remove("hidden");
-            revealPhotos();
-        }
-    }
-}
-
-function rightAnswer(){
-    currentQuestionIndex++;
-    if (currentQuestionIndex < quizQuestions.length) {
-        loadQuestion();
-    } else {
-        quiz.style.display="none";
-        final.classList.remove("hidden");
-        revealPhotos();
-    }
-}
 
 noBtn.onmouseover=()=>{
     noBtn.style.left=Math.random()*70+"vw";
@@ -262,9 +215,10 @@ noBtn.onmouseover=()=>{
 };
 
 function accepted(){
-    final.style.display="none";
+    final.classList.add("hidden");
     end.classList.remove("hidden");
 }
+
 function revealPhotos(){
     const photos=document.querySelectorAll(".reveal-photo");
     photos.forEach((img,index)=>{
@@ -273,10 +227,7 @@ function revealPhotos(){
         }, index * 800);
     });
 }
-
 </script>
 
 </body>
 </html>
-
-
