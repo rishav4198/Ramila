@@ -16,6 +16,17 @@
 }
 .reveal-photo.show{ filter: blur(0); }
 
+/* Styling for YOUR photo at the end */
+.my-photo {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #ff4d6d;
+    margin-top: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
 body{
     margin:0;
     background: linear-gradient(135deg,#ff758c,#ff7eb3);
@@ -43,7 +54,6 @@ h1{font-size:2.2em}
 }
 .heart:active { transform: scale(1.5); }
 
-/* Explosion Animation */
 .explosion {
     position: fixed;
     pointer-events: none;
@@ -98,13 +108,13 @@ button{
 
 <div id="game2" class="hidden">
     <div class="card">
-        <h2>😄 अब मेरो मुटु समात  त!</h2>
+        <h2>😄 अब मेरो मुटु समात त!</h2>
     </div>
     <div id="catch">❤️</div>
 </div>
 
 <div id="quiz" class="hidden card">
-    <h2>😜</h2>
+    <h2>😜 सानो प्रश्न</h2>
     <p id="quiz-question">लोड हुँदैछ...</p>
     <div id="quiz-options" style="min-height: 150px; position: relative;"></div>
 </div>
@@ -126,6 +136,8 @@ button{
 
 <div id="end" class="hidden card">
     <h2>🎉 Now you are stuck with me 😄❤️🎉</h2>
+    <img src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/55710983-cda3-440c-8dbb-207a0d956bef.jpg" alt="मेरो तस्बिर" class="my-photo">
+    <p style="margin-top:15px; font-weight:bold;">I love you! ❤️</p>
 </div>
 
 <script>
@@ -143,7 +155,6 @@ const music = document.getElementById("myMusic");
 let clickCount = 0;
 let currentQuestionIndex = 0;
 
-// --- STAGE 1: LOGIC ---
 function createExplosion(x, y, text) {
     const el = document.createElement("div");
     el.className = "explosion";
@@ -156,14 +167,11 @@ function createExplosion(x, y, text) {
 
 function handleHeartClick(element, event) {
     clickCount++;
-    
     if (clickCount < 3) {
-        // Wrong hearts logic
         createExplosion(event.clientX, event.clientY, "Wrong Heart! ❌");
         element.style.visibility = "hidden";
     } else {
-        // 3rd heart - START MUSIC AND ADVANCE
-        music.play().catch(e => console.log("Music blocked by browser"));
+        music.play().catch(e => console.log("Music blocked"));
         element.style.visibility = "hidden";
         setTimeout(() => {
             game1.classList.add("hidden");
@@ -173,7 +181,6 @@ function handleHeartClick(element, event) {
     }
 }
 
-// --- STAGE 2: LOGIC ---
 function moveCatch(){
     catchHeart.style.left=Math.random()*80+"vw";
     catchHeart.style.top=Math.random()*60+"vh";
@@ -184,7 +191,6 @@ catchHeart.onclick=()=>{
     loadQuestion();
 };
 
-// --- STAGE 3: LOGIC ---
 const quizQuestions = [
     {
         question: "रमिलालाई धेरै के मन पर्छ?",
@@ -202,7 +208,6 @@ const quizQuestions = [
             { text: "अत्यन्तै खतरनाक 😍", isCorrect: true }
         ]
     },
-
     {
         question: "के तिमी मलाई मन पराउँछौ?",
         options: [
@@ -210,13 +215,13 @@ const quizQuestions = [
             { text: "अलिअलि", isCorrect: false },
             { text: "म तिमीलाई माया गर्छु! ❤️", isCorrect: true }
         ]
-    }
-
-    question: "पक्का तिमी मलाई मन पराउँदैनौ?",
+    },
+    {
+        question: "पक्का तिमी मलाई मन पराउँदैनौ?",
         options: [
             { text: "हो, म पक्का छु", isCorrect: false },
             { text: "सय प्रतिशत पक्का", isCorrect: false },
-            { text: "किन नपराउनु, तिमी मेरो सबैभन्दा मिल्ने साथी हो!", isCorrect: true }
+            { text: "किन नपराउनु, तिमी मेरो साथी मात्रै हौ र!", isCorrect: true }
         ]
     },
     {
@@ -227,7 +232,6 @@ const quizQuestions = [
             { text: "सय प्रतिशत मन पर्छ!", isCorrect: true }
         ]
     }
-];
 ];
 
 function loadQuestion() {
@@ -265,7 +269,6 @@ function rightAnswer(){
     }
 }
 
-// --- FINAL STAGE ---
 noBtn.onmouseover=()=>{
     noBtn.style.left=Math.random()*70+"vw";
     noBtn.style.top=Math.random()*60+"vh";
@@ -288,4 +291,3 @@ function revealPhotos(){
 
 </body>
 </html>
-
