@@ -1,304 +1,693 @@
 <!DOCTYPE html>
+
 <html lang="ne">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>रामिलाका लागि ❤️</title>
 
+
+
 <style>
+
 .reveal-photo{
+
     width:90px;
+
     height:120px;
+
     object-fit:cover;
+
     border-radius:15px;
+
     filter: blur(8px);
+
     transition: filter 1.5s ease;
+
 }
+
 .reveal-photo.show{ filter: blur(0); }
 
-/* FIXED: Showing your full face properly with cover effect */
+
+
+/* FIXED: Showing your full face properly */
+
 .my-photo {
+
     width: 280px; 
-    height: 350px; /* Fixed height for consistent look */
-    object-fit: cover; /* Fills the area completely */
-    object-position: top; /* Keeps the focus on the face */
+
+    height: auto;
+
+    max-height: 400px;
+
+    object-fit: contain; /* This ensures the whole photo fits without cropping */
+
     border-radius: 20px; 
+
     border: 5px solid #ff4d6d;
+
     margin-top: 20px;
+
     background-color: white;
+
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+
 }
+
+
 
 body{
+
     margin:0;
+
     background: linear-gradient(135deg,#ff758c,#ff7eb3);
+
     font-family: Arial, sans-serif;
+
     text-align:center;
+
     color:white;
+
     padding:20px;
+
     overflow-x: hidden;
+
     height: 100vh;
+
 }
+
 h1{font-size:2.2em}
+
 .card{
+
     background:white;
+
     color:#333;
+
     padding:25px;
+
     border-radius:20px;
+
     margin-top:25px;
+
 }
+
 .heart{
+
     font-size:55px;
+
     margin:10px;
+
     cursor:pointer;
+
     display: inline-block;
+
 }
+
+
 
 .explosion {
+
     position: fixed;
+
     pointer-events: none;
+
     font-weight: bold;
+
     font-size: 22px;
+
     color: yellow;
+
     animation: explode 2.0s ease-out forwards;
+
     z-index: 1000;
+
 }
+
+
 
 @keyframes explode {
+
     0% { transform: scale(1) translateY(0); opacity: 1; }
+
     50% { opacity: 1; }
+
     100% { transform: scale(2.5) translateY(-100px); opacity: 0; }
+
 }
+
+
 
 .hidden{display:none}
+
 button{
+
     padding:12px 25px;
+
     border:none;
+
     border-radius:25px;
+
     font-size:16px;
+
     cursor:pointer;
+
     margin:10px;
+
 }
+
 .fly { position: absolute; z-index: 1000; }
+
 .yes{background:#ff4d6d;color:white}
+
 .no{ background:#ddd; position:absolute; }
 
+
+
 #catch{
+
     font-size:60px;
+
     position:absolute;
+
     cursor:pointer;
+
     z-index: 100;
+
 }
 
-/* MODIFIED: Special Popup to match your screenshot */
+
+
 #special-popup {
+
     position: fixed;
+
     top: 50%;
+
     left: 50%;
+
     transform: translate(-50%, -50%);
-    background: #f0f0f0; /* Light grey background like screenshot */
-    padding: 15px;
-    border-radius: 30px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+
     z-index: 2000;
+
     color: #333;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
+    width: 280px;
+
 }
 
-#special-popup.hidden { display: none; }
-
-#popup-pic {
-    width: 100%;
-    height: 380px; 
-    border-radius: 20px; 
-    object-fit: cover; /* FIXED: Now covers the whole frame */
-    object-position: top; /* Focus on face */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-#popup-text {
-    color: #ff4d6d;
-    margin: 15px 0;
-    font-size: 1.4em;
-}
 </style>
+
 </head>
+
+
 
 <body>
 
+
+
 <h1>❤️ रामिला, ल सुरु गरम है त ❤️</h1>
 
+
+
 <audio id="myMusic" loop>
+
     <source src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/full_circle_maya_with_lyrics_mp3_23989.mp3" type="audio/mpeg">
+
 </audio>
 
+
+
 <div id="special-popup" class="hidden">
-    <img id="popup-pic" src="">
-    <h3 id="popup-text"></h3>
+
+    <img id="popup-pic" src="" style="width:220px; border-radius:15px; height: 280px; object-fit: contain; background: #eee;">
+
+    <h3 id="popup-text" style="color:#ff4d6d"></h3>
+
     <button class="yes" onclick="closePopup()">ल अर्को अब 😄</button>
+
 </div>
+
+
 
 <div id="game1">
+
     <p id="game1-instruction">पहिले एउटा मुटु रोज 😄</p>
+
     <span class="heart" onclick="handleHeartClick(this, event)">❤️</span>
+
     <span class="heart" onclick="handleHeartClick(this, event)">❤️</span>
+
     <span class="heart" onclick="handleHeartClick(this, event)">❤️</span>
+
 </div>
+
+
 
 <div id="game2" class="hidden">
+
     <div class="card">
+
         <h2>😄 अब मेरो मुटु समात ल !</h2>
+
     </div>
+
     <div id="catch">❤️</div>
+
 </div>
+
+
 
 <div id="quiz" class="hidden card">
+
     <h2>😜</h2>
+
     <p id="quiz-question">लोड हुँदैछ...</p>
+
     <div id="quiz-options" style="min-height: 150px; position: relative;"></div>
+
 </div>
+
+
 
 <div id="final" class="hidden card">
+
     <h2 id="final-heading"> ❤️❤️❤️</h2>
+
     <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
+
         <img class="reveal-photo" src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/a23e33dc-8a6f-4515-863b-23cd76148767.jpg"> 
+
         <img class="reveal-photo" src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/a240ea63-89e9-43dd-887c-4bdde55eb42b.jpg"> 
+
         <img class="reveal-photo" src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/c207bac1-8684-4b1e-86dd-f14d1ea03a43.jpg"> 
+
     </div>
+
     <p id="final-message">
+
         ठीक छ… ल अन्तिम प्रश्न 😄<br><br>
+
         के तिमी म संग यो जुनी बिताउन चाहन्छौ ? 😂
+
     </p>
+
     <button class="yes" onclick="accepted()">हुन्छ 😊</button>
+
     <button class="no" id="noBtn">नाई 😅</button>
+
 </div>
+
+
 
 <div id="end" class="hidden card">
+
     <h2>🎉 Now you are stuck with me 😄❤️🎉</h2>
+
     <img src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/55710983-cda3-440c-8dbb-207a0d956bef.jpg" alt="मेरो तस्बिर" class="my-photo">
+
     <p style="margin-top:15px; font-weight:bold;">I love you! ❤️</p>
+
 </div>
 
+
+
 <script>
+
+// ... (Logic stays the same, I just kept it here so you can copy-paste the whole file) ...
+
 const game1=document.getElementById("game1");
+
 const game2=document.getElementById("game2");
+
 const catchHeart=document.getElementById("catch");
+
 const quiz=document.getElementById("quiz");
+
 const final=document.getElementById("final");
+
 const end=document.getElementById("end");
+
 const noBtn=document.getElementById("noBtn");
+
 const quizQuestion = document.getElementById("quiz-question");
+
 const quizOptions = document.getElementById("quiz-options");
+
 const music = document.getElementById("myMusic");
+
 const specialPopup = document.getElementById("special-popup");
+
 const popupPic = document.getElementById("popup-pic");
+
 const popupText = document.getElementById("popup-text");
 
+
+
 let clickCount = 0;
+
 let currentQuestionIndex = 0;
 
+
+
 function createExplosion(x, y, text) {
+
     const el = document.createElement("div");
+
     el.className = "explosion";
+
     el.innerText = text;
+
     el.style.left = x + "px";
+
     el.style.top = y + "px";
+
     document.body.appendChild(el);
+
     setTimeout(() => el.remove(), 2000);
+
 }
+
+
 
 function handleHeartClick(element, event) {
+
     clickCount++;
+
     if (clickCount < 3) {
+
         createExplosion(event.clientX, event.clientY, "Wrong Heart! ❌");
+
         element.style.visibility = "hidden";
+
     } else {
+
         music.play().catch(e => console.log("Music blocked"));
+
         element.style.visibility = "hidden";
+
         setTimeout(() => {
+
             game1.classList.add("hidden");
+
             game2.classList.remove("hidden");
+
             moveCatch();
+
         }, 500);
+
     }
+
 }
+
+
 
 function moveCatch(){
+
     catchHeart.style.left=Math.random()*80+"vw";
+
     catchHeart.style.top=Math.random()*60+"vh";
+
 }
+
 catchHeart.onclick=()=>{
+
     game2.classList.add("hidden");
+
     quiz.classList.remove("hidden");
+
     loadQuestion();
+
 };
 
+
+
 const quizQuestions = [
+
     {
+
         question: "रमिलालाई धेरै के मन पर्छ?",
+
         options: [
+
             { text: "KitKat 🙂", isCorrect: false },
+
             { text: "म:म 😐", isCorrect: false },
+
             { text: "इस्कुश 😍", isCorrect: true, isSpecial: true, pic: "https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/images.jpg", msg: "ल लाऊ खाऊ 🤣" }
+
         ]
+
     },
+
     {
+
         question: "रामिलाको मुस्कान कस्तो छ?",
+
         options: [
+
             { text: "सामान्य 🙂", isCorrect: false },
+
             { text: "ठीकठाक 😐", isCorrect: false },
+
             { text: "अत्यन्तै खतरनाक 😍", isCorrect: true, isSpecial: true, pic: "https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/smile.jpg", msg: "खतरनाक हैन यस्तो राम्रो चै होला 😘😘😘" }
+
         ]
+
     },
+
     {
+
         question: "रमिला कतिको नाटक गर्छ ?",
+
         options: [
+
             { text: "गर्दिन एकदम राम्रो छु म", isCorrect: false },
+
             { text: "अलिअलि", isCorrect: false },
+
             { text: "एकदमै धेरै", isCorrect: true }
+
         ]
+
     },
+
     {
+
         question: "के तिमी मलाई मन पराउँछौ?",
+
         options: [
+
             { text: "अह गर्दिन नाटक गरेको", isCorrect: false },
+
             { text: "हल्का", isCorrect: false },
+
             { text: "अ थोरै गर्छु ", isCorrect: true }
+
         ]
+
     },
-    {
+
+        {
+
         question: "नाटक होकी साँची हो?",
+
         options: [
+
             { text: "नाटक हो ", isCorrect: false },
+
             { text: "गफ हो", isCorrect: false },
+
             { text: "साँची 😊 ", isCorrect: true }
+
         ]
+
     },
+
     {
+
         question: "कति प्रतिशत मन पर्छ?",
+
         options: [
+
             { text: "शून्य प्रतिशत", isCorrect: false },
+
             { text: "आलु प्रतिशत", isCorrect: false },
+
             { text: "सय प्रतिशत मन पर्छ!", isCorrect: true }
+
         ]
+
     },
+
     {
+
         question: "पक्का होनी ?",
+
         options: [
+
             { text: "होइन झुटो बोलेको", isCorrect: false },
+
             { text: "मक्ख मात्र बनाईदेको ", isCorrect: false },
+
             { text: "किन नपराउनु, तिमी त मेरो मुटु हौ नि 😘", isCorrect: true }
+
         ]
+
     }
+
 ];
 
+
+
 function loadQuestion() {
+
     const q = quizQuestions[currentQuestionIndex];
+
     quizQuestion.textContent = q.question;
+
     quizOptions.innerHTML = '';
+
     
+
     q.options.forEach(option => {
-        const button
+
+        const button = document.createElement('button');
+
+        button.textContent = option.text;
+
+        
+
+        if (option.isCorrect) {
+
+            button.className = "yes";
+
+            button.onclick = () => {
+
+                if(option.isSpecial) {
+
+                    popupPic.src = option.pic;
+
+                    popupText.innerText = option.msg;
+
+                    specialPopup.classList.remove("hidden");
+
+                } else {
+
+                    rightAnswer();
+
+                }
+
+            };
+
+        } else {
+
+            button.onmouseover = () => {
+
+                button.classList.add("fly");
+
+                button.style.left = Math.random() * 70 + "vw";
+
+                button.style.top = Math.random() * 60 + "vh";
+
+            };
+
+            button.onclick = () => alert("समातेर देखाउ पहिले! 😂");
+
+        }
+
+        quizOptions.appendChild(button);
+
+    });
+
+}
+
+
+
+function closePopup() {
+
+    specialPopup.classList.add("hidden");
+
+    rightAnswer();
+
+}
+
+
+
+function rightAnswer(){
+
+    currentQuestionIndex++;
+
+    if (currentQuestionIndex < quizQuestions.length) {
+
+        loadQuestion();
+
+    } else {
+
+        quiz.classList.add("hidden");
+
+        final.classList.remove("hidden");
+
+        revealPhotos();
+
+    }
+
+}
+
+
+
+noBtn.onmouseover=()=>{
+
+    noBtn.style.left=Math.random()*70+"vw";
+
+    noBtn.style.top=Math.random()*60+"vh";
+
+};
+
+
+
+function accepted(){
+
+    final.classList.add("hidden");
+
+    end.classList.remove("hidden");
+
+}
+
+
+
+function revealPhotos(){
+
+    const photos=document.querySelectorAll(".reveal-photo");
+
+    photos.forEach((img,index)=>{
+
+        setTimeout(()=>{
+
+            img.classList.add("show");
+
+        }, index * 800);
+
+    });
+
+}
+
+</script>
+
+
+
+</body>
+
+</html>
