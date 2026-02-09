@@ -38,7 +38,27 @@ h1{font-size:2.2em}
     font-size:55px;
     margin:10px;
     cursor:pointer;
+    display: inline-block;
+    transition: transform 0.2s;
 }
+.heart:active { transform: scale(1.5); }
+
+/* Explosion Animation */
+.explosion {
+    position: fixed;
+    pointer-events: none;
+    font-weight: bold;
+    font-size: 20px;
+    color: yellow;
+    animation: explode 0.8s forwards;
+    z-index: 1000;
+}
+
+@keyframes explode {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(3) translateY(-50px); opacity: 0; }
+}
+
 .hidden{display:none}
 button{
     padding:12px 25px;
@@ -48,9 +68,7 @@ button{
     cursor:pointer;
     margin:10px;
 }
-/* This class makes buttons fly */
 .fly { position: absolute; z-index: 1000; }
-
 .yes{background:#ff4d6d;color:white}
 .no{ background:#ddd; position:absolute; }
 
@@ -72,22 +90,21 @@ button{
 </audio>
 
 <div id="game1">
-    <p>पहिले एउटा मुटु रोज 😄</p>
-    <span class="heart" onclick="startHearts(this)">❤️</span>
-    <span class="heart" onclick="startHearts(this)">❤️</span>
-    <span class="heart" onclick="startHearts(this)">❤️</span>
+    <p id="game1-instruction">पहिले एउटा मुटु रोज 😄</p>
+    <span class="heart" onclick="handleHeartClick(this, event)">❤️</span>
+    <span class="heart" onclick="handleHeartClick(this, event)">❤️</span>
+    <span class="heart" onclick="handleHeartClick(this, event)">❤️</span>
 </div>
 
 <div id="game2" class="hidden">
     <div class="card">
-        <h2>😄 यो मुटु समात!</h2>
-        <p>(एकचोटि मात्र)</p>
+        <h2>😄 अब मेरो मुटु समात  त!</h2>
     </div>
     <div id="catch">❤️</div>
 </div>
 
 <div id="quiz" class="hidden card">
-    <h2>😜 सानो प्रश्न</h2>
+    <h2>😜</h2>
     <p id="quiz-question">लोड हुँदैछ...</p>
     <div id="quiz-options" style="min-height: 150px; position: relative;"></div>
 </div>
@@ -124,9 +141,51 @@ const quizQuestion = document.getElementById("quiz-question");
 const quizOptions = document.getElementById("quiz-options");
 const music = document.getElementById("myMusic");
 
-let count=0;
+let clickCount = 0;
 let currentQuestionIndex = 0;
 
+// --- STAGE 1: LOGIC ---
+function createExplosion(x, y, text) {
+    const el = document.createElement("div");
+    el.className = "explosion";
+    el.innerText = text;
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 800);
+}
+
+function handleHeartClick(element, event) {
+    clickCount++;
+    
+    if (clickCount < 3) {
+        // Wrong hearts logic
+        createExplosion(event.clientX, event.clientY, "Wrong Heart! ❌");
+        element.style.visibility = "hidden";
+    } else {
+        // 3rd heart - START MUSIC AND ADVANCE
+        music.play().catch(e => console.log("Music blocked by browser"));
+        element.style.visibility = "hidden";
+        setTimeout(() => {
+            game1.classList.add("hidden");
+            game2.classList.remove("hidden");
+            moveCatch();
+        }, 500);
+    }
+}
+
+// --- STAGE 2: LOGIC ---
+function moveCatch(){
+    catchHeart.style.left=Math.random()*80+"vw";
+    catchHeart.style.top=Math.random()*60+"vh";
+}
+catchHeart.onclick=()=>{
+    game2.classList.add("hidden");
+    quiz.classList.remove("hidden");
+    loadQuestion();
+};
+
+// --- STAGE 3: LOGIC ---
 const quizQuestions = [
     {
         question: "रमिलालाई धेरै के मन पर्छ?",
@@ -154,30 +213,6 @@ const quizQuestions = [
     }
 ];
 
-// --- STAGE 1 LOGIC ---
-function startHearts(element) {
-    music.play().catch(e => console.log("Music started"));
-    element.style.visibility = "hidden";
-    count++;
-    if(count === 3) {
-        game1.classList.add("hidden");
-        game2.classList.remove("hidden");
-        moveCatch();
-    }
-}
-
-// --- STAGE 2 LOGIC ---
-function moveCatch(){
-    catchHeart.style.left=Math.random()*80+"vw";
-    catchHeart.style.top=Math.random()*60+"vh";
-}
-catchHeart.onclick=()=>{
-    game2.classList.add("hidden");
-    quiz.classList.remove("hidden");
-    loadQuestion();
-};
-
-// --- STAGE 3 LOGIC (Quiz with flying buttons) ---
 function loadQuestion() {
     const q = quizQuestions[currentQuestionIndex];
     quizQuestion.textContent = q.question;
@@ -191,7 +226,6 @@ function loadQuestion() {
             button.className = "yes";
             button.onclick = rightAnswer;
         } else {
-            // Make wrong answers fly away on hover
             button.onmouseover = () => {
                 button.classList.add("fly");
                 button.style.left = Math.random() * 70 + "vw";
