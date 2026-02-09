@@ -24,6 +24,7 @@ body{
     color:white;
     padding:20px;
     overflow-x: hidden;
+    height: 100vh;
 }
 h1{font-size:2.2em}
 .card{
@@ -47,8 +48,12 @@ button{
     cursor:pointer;
     margin:10px;
 }
+/* This class makes buttons fly */
+.fly { position: absolute; z-index: 1000; }
+
 .yes{background:#ff4d6d;color:white}
 .no{ background:#ddd; position:absolute; }
+
 #catch{
     font-size:60px;
     position:absolute;
@@ -66,17 +71,11 @@ button{
     <source src="https://raw.githubusercontent.com/rishav4198/Ramila/refs/heads/main/full_circle_maya_with_lyrics_mp3_23989.mp3" type="audio/mpeg">
 </audio>
 
-<div id="quiz" class="card">
-    <h2>😜 सानो प्रश्न</h2>
-    <p id="quiz-question">लोड हुँदैछ...</p>
-    <div id="quiz-options"></div>
-</div>
-
-<div id="game1" class="hidden">
-    <p>अब यी मुटुहरूलाई गायब पार! 😄</p>
-    <span class="heart">❤️</span>
-    <span class="heart">❤️</span>
-    <span class="heart">❤️</span>
+<div id="game1">
+    <p>पहिले एउटा मुटु रोज 😄</p>
+    <span class="heart" onclick="startHearts(this)">❤️</span>
+    <span class="heart" onclick="startHearts(this)">❤️</span>
+    <span class="heart" onclick="startHearts(this)">❤️</span>
 </div>
 
 <div id="game2" class="hidden">
@@ -85,6 +84,12 @@ button{
         <p>(एकचोटि मात्र)</p>
     </div>
     <div id="catch">❤️</div>
+</div>
+
+<div id="quiz" class="hidden card">
+    <h2>😜 सानो प्रश्न</h2>
+    <p id="quiz-question">लोड हुँदैछ...</p>
+    <div id="quiz-options" style="min-height: 150px; position: relative;"></div>
 </div>
 
 <div id="final" class="hidden card">
@@ -96,9 +101,7 @@ button{
     </div>
     <p id="final-message">
         ठीक छ… अब सिधै सोध्छु 😄<br><br>
-        के तिमी मेरो साथमा<br>
-        अझै यस्ता रमाइला खेलहरू<br>
-        खेल्न चाहन्छौ 😂😂😂?
+        के तिमी मेरो साथमा अझै यस्ता रमाइला खेलहरू खेल्न चाहन्छौ? 😂
     </p>
     <button class="yes" onclick="accepted()">हुन्छ 😊</button>
     <button class="no" id="noBtn">नाई 😅</button>
@@ -110,7 +113,6 @@ button{
 </div>
 
 <script>
-const hearts=document.querySelectorAll(".heart");
 const game1=document.getElementById("game1");
 const game2=document.getElementById("game2");
 const catchHeart=document.getElementById("catch");
@@ -152,26 +154,51 @@ const quizQuestions = [
     }
 ];
 
-// Load first question on start
-window.onload = loadQuestion;
+// --- STAGE 1 LOGIC ---
+function startHearts(element) {
+    music.play().catch(e => console.log("Music started"));
+    element.style.visibility = "hidden";
+    count++;
+    if(count === 3) {
+        game1.classList.add("hidden");
+        game2.classList.remove("hidden");
+        moveCatch();
+    }
+}
 
+// --- STAGE 2 LOGIC ---
+function moveCatch(){
+    catchHeart.style.left=Math.random()*80+"vw";
+    catchHeart.style.top=Math.random()*60+"vh";
+}
+catchHeart.onclick=()=>{
+    game2.classList.add("hidden");
+    quiz.classList.remove("hidden");
+    loadQuestion();
+};
+
+// --- STAGE 3 LOGIC (Quiz with flying buttons) ---
 function loadQuestion() {
     const q = quizQuestions[currentQuestionIndex];
     quizQuestion.textContent = q.question;
     quizOptions.innerHTML = '';
+    
     q.options.forEach(option => {
         const button = document.createElement('button');
         button.textContent = option.text;
-        button.onclick = () => {
-            // PLAY MUSIC on the first click!
-            music.play().catch(e => console.log("Waiting for user interaction"));
-            
-            if(option.isCorrect) {
-                rightAnswer();
-            } else {
-                alert("हाहा 😄 होइन होला !");
-            }
-        };
+        
+        if (option.isCorrect) {
+            button.className = "yes";
+            button.onclick = rightAnswer;
+        } else {
+            // Make wrong answers fly away on hover
+            button.onmouseover = () => {
+                button.classList.add("fly");
+                button.style.left = Math.random() * 70 + "vw";
+                button.style.top = Math.random() * 60 + "vh";
+            };
+            button.onclick = () => alert("समातेर देखाउ पहिले! 😂");
+        }
         quizOptions.appendChild(button);
     });
 }
@@ -182,33 +209,12 @@ function rightAnswer(){
         loadQuestion();
     } else {
         quiz.classList.add("hidden");
-        game1.classList.remove("hidden");
+        final.classList.remove("hidden");
+        revealPhotos();
     }
 }
 
-hearts.forEach(h=>{
-    h.onclick=()=>{
-        h.style.visibility="hidden";
-        count++;
-        if(count===3){
-            game1.classList.add("hidden");
-            game2.classList.remove("hidden");
-            moveCatch();
-        }
-    }
-});
-
-function moveCatch(){
-    catchHeart.style.left=Math.random()*80+"vw";
-    catchHeart.style.top=Math.random()*60+"vh";
-}
-
-catchHeart.onclick=()=>{
-    game2.classList.add("hidden");
-    final.classList.remove("hidden");
-    revealPhotos();
-};
-
+// --- FINAL STAGE ---
 noBtn.onmouseover=()=>{
     noBtn.style.left=Math.random()*70+"vw";
     noBtn.style.top=Math.random()*60+"vh";
